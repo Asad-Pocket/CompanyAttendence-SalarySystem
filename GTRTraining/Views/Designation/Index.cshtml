@@ -1,0 +1,96 @@
+﻿@model Designation
+@{
+
+}
+<p><h3 style="color : brown">Add Designation</h3></p>
+<form asp-action="index">
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <label asp-for="DesigName" class="form-label"><b>Enter Designation</b></label>
+        <input asp-for="DesigName" type="text" class="form-control">
+        <span class="text-danger" asp-validation-for="DesigName"></span>
+    </div>
+    <p>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    </p>
+</form>
+
+<div id="table"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@5.0.6/dist/css/tabulator.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/tabulator-tables@5.0.6/dist/js/tabulator.min.js"></script>
+<script>
+    var table;
+
+    $(document).ready(function () {
+        fetchDataFromServer();
+    });
+
+    function fetchDataFromServer() {
+        var url = '/Designation/ShowDesignation';
+        return $.ajax({
+            url: url,
+            dataType: "json",
+        }).done(function (response) {
+            console.log("Normal response:", response);
+            var dataTable = response;
+
+            initializeOrUpdateTable(dataTable);
+        });
+    }
+
+    function initializeOrUpdateTable(dataTable) {
+        if (!table) {
+            table = new Tabulator("#table", {
+                data: dataTable,
+                layout: "fitColumns",
+                columns: [
+                    { title: 'desigId', field: 'desigId', visible: false },
+                    { title: 'Designation', field: 'desigName' },
+                    {
+                        title: "Actions",
+                        formatter: function (cell, formatterParams, onRendered) {
+                            var rowData = cell.getRow().getData();
+                            console.log('Row data:', rowData);
+                            console.log('Row data:', rowData.desigName);
+                            return '<button class="btn btn-sm btn-primary" onclick="editRow(' + rowData.desigId + ')">Edit</button>' +
+                                '<button class="btn btn-sm btn-danger" onclick="deleteRow(' + rowData.desigId + ')">Delete</button>';
+                        },
+                        headerSort: false,
+                        width: 200,
+                    },
+                ]
+            });
+        } else {
+            table.setData(dataTable);
+        }
+    }
+
+    // function submitForm() {
+    //     $.ajax({
+    //         url: '/Designation/Index',
+    //         type: 'POST',
+    //         data: $('#addDesignationForm').serialize(),
+    //         success: function (data) {
+    //             $('#addDesignationForm')[0].reset();
+    //             fetchDataFromServer(); // Now this should work
+    //         },
+    //         error: function () {
+    //             console.error('Error submitting form.');
+    //         }
+    //     });
+    // }
+
+    function editRow(id) {
+        window.location.href = '/Designation/Edit/' + id;
+    }
+
+    function deleteRow(id) {
+        window.location.href = '/Designation/Delete/' + id;
+    }
+</script>

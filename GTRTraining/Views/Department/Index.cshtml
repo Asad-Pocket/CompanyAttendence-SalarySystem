@@ -1,0 +1,98 @@
+﻿@model Department
+@{
+}
+<p><h3 style="color : brown">Add New Department</h3></p>
+<form asp-action="Index">
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <label asp-for="DeptName" class="form-label"><b>Enter Department Name</b></label>
+        <input asp-for="DeptName" type="text" class="form-control">
+        <span asp-validation-for="DeptName" class="text-danger"></span>
+    </div>
+    <p>
+
+
+        <button type="submit" class="btn btn-primary">Add</button>
+
+</form>
+
+<div id="tableContainer"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@5.0.6/dist/css/tabulator.min.css" rel="stylesheet">
+
+<script src="https://unpkg.com/tabulator-tables@5.0.6/dist/js/tabulator.min.js"></script>
+<script>
+    var table;
+
+    $(document).ready(function () {
+        fetchDataFromServer();
+    });
+    function fetchDataFromServer() {
+        var url = '/Department/ShowDepartment';
+        return $.ajax({
+            url: url,
+            dataType: "json",
+        }).done(function (response) {
+            console.log("Normal response:", response);
+            var dataTable = response;
+
+            initializeOrUpdateTable(dataTable);
+        });
+    }
+    function initializeOrUpdateTable(dataTable) {
+        if (!table) 
+        {
+            table = new Tabulator("#tableContainer", 
+            {
+                data: dataTable,
+                layout: "fitColumns",
+                frozenRows: 1,
+                columns: [
+                    { title: 'deptId', field: 'deptId', visible: false },
+                    { title: 'Department', field: 'deptName' },
+                    {
+                        title: "Actions",
+                        formatter: function (cell, formatterParams, onRendered) {
+                            var rowData = cell.getRow().getData();
+                            console.log('Row data:', rowData);
+                            console.log('Row data:', rowData.deptId);
+                            return '<button class="btn btn-sm btn-primary" onclick="editRow(' + rowData.deptId + ')">Edit</button>' +
+                                    '<button class="btn btn-sm btn-danger" onclick="deleteRow(' + rowData.deptId + ')">Delete</button>';
+                        },
+                        headerSort: false,
+                        align: 'center',
+                        width: 200,
+                    },
+                ],
+                dataBound: function () {
+                    var rows = table.getRows();
+                    if (rows.length > 0) {
+                        var cells = rows[0].getCells();
+                        cells.forEach(cell => {
+                            cell.freeze();
+                        });
+                    }
+                },
+            });
+        }
+        else 
+        {
+            table.setData(dataTable);
+        }
+    }
+
+    function editRow(id) {
+        window.location.href = '/Department/Edit/' + id;
+    }
+
+    function deleteRow(id) {
+        window.location.href = '/Department/Delete/' + id;
+
+        console.log('Delete clicked for row with ID:', id);
+    }
+</script>
+

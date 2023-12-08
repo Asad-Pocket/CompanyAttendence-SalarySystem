@@ -1,0 +1,24 @@
+﻿@using GTRTraining.DtoModel
+@model List<AttendanceDetails>
+
+<h2>Attendance Report</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Present Days</th>
+            <th>Late Days</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MonthName</td>
+                <td>@item.PresentDays</td>
+                <td>@item.LateDays</td>
+            </tr>
+        }
+    </tbody>
+</table>

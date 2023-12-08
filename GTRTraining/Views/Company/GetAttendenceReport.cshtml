@@ -1,0 +1,40 @@
+﻿@using System.Data
+@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Attendance Report";
+}
+
+<h2>Attendance Report</h2>
+
+@if (Model != null && Model.Rows.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee Code</th>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Present Days</th>
+                <th>Designation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row in Model.Rows)
+            {
+                <tr>
+                    <td>@row["EmployeeCode"]</td>
+                    <td>@row["EmployeeName"]</td>
+                    <td>@row["Designation"]</td>
+                    <td>@row["Department"]</td>
+                    <td>@row["PresentDays"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No data available.</p>
+}

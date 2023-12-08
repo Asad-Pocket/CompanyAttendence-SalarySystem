@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model EmployeeAttendance
+@{
+}
+
+<form asp-action="Edit" method="post">
+
+    <div class="form-group">
+        <input type="hidden" asp-for="EmpId" value="@ViewBag.EmpId" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="dtDate">Date :</label>
+        <input asp-for="dtDate" type="date" class="form-control" />
+        <span asp-validation-for="dtDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="InTime">In Time:</label>
+        <input asp-for="InTime" type="time" class="form-control" />
+        <span asp-validation-for="InTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="OutTime">Out Time:</label>
+        <input asp-for="OutTime" type="time" class="form-control" />
+        <span asp-validation-for="OutTime" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

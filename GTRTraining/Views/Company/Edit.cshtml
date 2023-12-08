@@ -1,0 +1,52 @@
+﻿
+@model Company
+
+<h1>Edit</h1>
+
+<form asp-action="Edit" method="post" asp-controller="Company">
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <input asp-for="ComId" type="hidden" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label asp-for="ComName" class="form-label"><b>Enter Company Name</b></label>
+        <input asp-for="ComName" type="text" class="form-control">
+        <span class="text-danger" asp-validation-for="ComName"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Basic" class="form-label"><b>Enter Basic Salary Ratio</b></label>
+        <input asp-for="Basic" type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="Basic"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="HRent" class="form-label"><b>Enter House Rent Ratio</b></label>
+        <input asp-for="HRent" type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="HRent"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Medical" class="form-label"><b>Enter Medical Expense Ratio</b></label>
+        <input asp-for="Medical" type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="Medical"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label"><b>Company Status</b></label>
+        <div class="form-check">
+            <input asp-for="IsInactive" type="radio" value="True" class="form-check-input" id="activeOption" checked>
+            <label class="form-check-label" for="activeOption">Active</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="IsInactive" type="radio" value="False" class="form-check-input" id="inactiveOption">
+            <label class="form-check-label" for="inactiveOption">Inactive</label>
+        </div>
+        <span class="text-danger" asp-validation-for="IsInactive"></span>
+    </div>
+    <p>
+
+
+    </p>
+    <button type="submit" class="btn btn-outline-secondary">Update</button>
+    <p>
+</form>
+

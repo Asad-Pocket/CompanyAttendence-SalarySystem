@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div id="tableContainer" class="d-flex flex-wrap justify-content-center"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            fetchDataFromServer();
+
+            function fetchDataFromServer() {
+                var url = '/Company/ShowCompanies';
+                return $.ajax({
+                    url: url,
+                    dataType: "json",
+                }).done(function (response) {
+                    console.log("Normal response:", response);
+                    var dataTable = response;
+
+                    initializeButtons(dataTable);
+                });
+            }
+
+            function initializeButtons(dataTable) {
+                var container = $("#tableContainer");
+
+                for (var i = 0; i < dataTable.length; i++) {
+                    // Use an IIFE (Immediately Invoked Function Expression) to create a closure
+                    (function () {
+                        var companyId = dataTable[i].comId;
+                        var companyName = dataTable[i].comName;
+
+                        // Create a button for each company
+                        var button = $('<button/>', {
+                            text: companyName,
+                            class: 'btn btn-primary m-2 btn-company',
+                            click: function () {
+                                // Get the company ID and Name from the closure
+                                var selectedCompanyId = companyId;
+                                var selectedCompanyName = companyName;
+
+                                // Send the selected company information to the backend
+                                sendSelectedCompany(selectedCompanyId, selectedCompanyName);
+                            }
+                        });
+
+                        // Append the button to the container
+                        container.append(button);
+                    })();
+                }
+            }
+
+            function sendSelectedCompany(companyId, companyName) {
+                var url = '/Company/StoreSelectedCompany';
+
+                // Use AJAX to send data to the backend
+                $.ajax({
+                    url: '/Home/StoreSelectedCompany',
+                    method: 'POST',
+                    data: { companyId: companyId, companyName: companyName },
+                    success: function (response) {
+                        console.log("response:", response);
+
+                        // Check if companyId is stored in the cookie
+                        if (response.success) {
+                            // Display an alert
+                            alert('Company ID stored in cookie successfully!');
+                            // Set the selected company name in the navbar
+                            $('#selectedCompanyNavbar').text('Selected Company: ' + companyName);
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    #tableContainer {
+        height: 100%;
+        margin-top: 20px;
+    }
+
+    .btn-company {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+</style>

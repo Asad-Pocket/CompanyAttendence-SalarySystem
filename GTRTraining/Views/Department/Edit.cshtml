@@ -1,0 +1,28 @@
+﻿@model Department
+@{
+}
+<p><h3 style="color : brown">Add New Department</h3></p>
+<form asp-action="Edit">
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <input asp-for="DeptId" type="hidden" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label asp-for="DeptName" class="form-label"><b>Enter Department Name</b></label>
+        <input asp-for="DeptName" type="text" class="form-control">
+        <span class="text-danger" asp-validation-for="DeptName"></span>
+    </div>
+    <p>
+
+
+    <button type="submit" class="btn-outline-secondary mt-2">Add</button>
+
+</form>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,117 @@
+﻿@model Employee
+@{
+    IEnumerable<Department> departments = ViewData["depts"] as IEnumerable<Department>;
+    IEnumerable<Designation> designations = ViewData["desigs"] as IEnumerable<Designation>;
+    IEnumerable<Shift> shifts = ViewData["shift"] as IEnumerable<Shift>;
+}
+<p><h3 style="color : brown">Add New Employee</h3></p>
+<form asp-action="Edit">
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <label asp-for="EmpCode" class="form-label"><b>Enter Employee Code</b></label>
+        <input asp-for="EmpCode" type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="EmpCode"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="EmpName" class="form-label"><b>Enter Employee Name</b></label>
+        <input asp-for="EmpName" type="text" class="form-control">
+        <span class="text-danger" asp-validation-for="EmpName"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"><b>Enter Gender</b></label>
+        <select class="form-select mt-2" id="Gender" P asp-for="Gender">
+            <option disabled selected asp-for="Gender" value= >
+                
+            </option>
+            <option asp-for="Gender" value="Male">Male</option>
+            <option asp-for="Gender" value="Female">Female</option>
+
+        </select>
+        <span class="text-danger" asp-validation-for="Gender"></span>
+    </div>
+    <label asp-for="DeptId" class="mb-1" for="Department"><b>Department</b></label>
+    <select class="form-select mt-2" id="Department" asp-for="DeptId">
+        <option disabled selected>
+            Select Department
+        </option>
+        @foreach (var x in departments)
+        {
+            <option asp-for="DeptId" value="@x.DeptId">@x.DeptName</option>
+        }
+
+    </select>
+    <p>
+
+    </p>
+    <label asp-for="DesigId" class="mb-1" for="Designation"><b>Designation</b></label>
+    <select class="form-select mt-2" id="Designation" P asp-for="DesigId">
+        <option disabled selected>
+            Select Designation
+        </option>
+        @foreach (var y in designations)
+        {
+            <option asp-for="DesigId" value="@y.DesigId">@y.DesigName</option>
+        }
+
+    </select>
+    <label asp-for="ShiftId" class="mb-1" for="Shift"><b>Shift</b></label>
+    <select class="form-select mt-2" id="Shift" P asp-for="ShiftId">
+        <option disabled selected>
+            Select Shift
+        </option>
+        @foreach (var y in shifts)
+        {
+            <option asp-for="ShiftId" value="@y.ShiftId">@y.ShiftName</option>
+        }
+
+    </select>
+    <p>
+
+    </p>
+    <div class="mb-3">
+        <label asp-for="Gross" class="form-label"><b>Enter Gross Salary</b></label>
+        <input asp-for="Gross" type="number" class="form-control" min="10000">
+        <span class="text-danger" asp-validation-for="Gross"></span>
+        <span class="text-danger" id="grossValidationMessage"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Basic" class="form-label"><b>Enter Basic Salary Ratio</b></label>
+        <input asp-for="Basic" readonly type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="Basic"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="HRent" class="form-label"><b>Enter House Rent Salary Ratio</b></label>
+        <input asp-for="HRent" readonly type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="HRent"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Medical" class="form-label"><b>Enter Medical Expense Salary Ratio</b></label>
+        <input asp-for="Medical" readonly type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="Medical"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Others" class="form-label"><b>Enter Others Expense Salary Ratio</b></label>
+        <input asp-for="Others" type="number" class="form-control">
+        <span class="text-danger" asp-validation-for="Others"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DtJoin" class="form-label"><b>Enter Joining Date</b></label>
+        <input asp-for="DtJoin" type="datetime-local" class="form-control">
+        <span class="text-danger" asp-validation-for="DtJoin"></span>
+    </div>
+    <p>
+
+
+    </p>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <p>
+</form>
+
+ @section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+ }

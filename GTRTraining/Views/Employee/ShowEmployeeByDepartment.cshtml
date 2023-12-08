@@ -1,0 +1,106 @@
+﻿@model Employee
+@{
+    IEnumerable<Department> departments = ViewData["depts"] as IEnumerable<Department>;
+}
+
+<center><h3 style="color : brown"> Search By Department </h3></center>
+<div class="container mt-5">
+
+    <form asp-action="ShowEmployeeByDepartment" id="employeeForm">
+        <p>
+            <label asp-for="DeptId" class="mb-1" for="Department"><b>Department</b></label>
+            <select class="form-select mt-2" id="Department" asp-for="DeptId">
+                <option disabled selected>Select Department</option>
+                @foreach (var x in departments)
+                {
+                    <option asp-for="DeptId" id="Department" value="@x.DeptId">@x.DeptName</option>
+                }
+            </select>
+        </p>
+        <button id="submitButton" class="btn btn-outline-secondary">Search</button>
+        <p>
+    </form>
+
+    <div id="itemsContainer"></div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        // Handle button click
+        $('#submitButton').click(function () {
+            // Get selected values
+            var selectedDepartment = $('#Department').val();
+            console.log(selectedDepartment);
+            // Make AJAX request
+            $.ajax({
+                url: '/Employee/EmployeeByDepartment',
+                method: 'Post',
+                data: { deptId: selectedDepartment },
+                success: function (data) {
+                    // Update the display area with the received item list
+                    console.log(data);
+                    displayItems(data);
+                },
+                error: function () {
+                    alert("Error occurred while fetching items.");
+                }
+            });
+
+            // Prevent form submission
+            return false;
+        });
+
+        // Function to display items
+        function displayItems(items) {
+            var itemsContainer = $('#itemsContainer');
+            itemsContainer.empty(); // Clear existing items
+
+            if (items && items.length > 0) {
+                var tableHtml = '<table id="mytable" class="table table-bordered caption-top">' +
+                    '<caption class="caption-top"><b><b><center><h3 style="color : brown">List Of Employee</h3></center></b></b></caption>' +
+                    '<thead class="table-dark">' +
+                    '<tr>' +
+                    '<th>EmpCode</th>' +
+                    '<th>Employee Name</th>' +
+                    '<th>Designation</th>' +
+                    '<th>Shift</th>' +
+                    '<th>Gender</th>' +
+                    '<th>Salary</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>';
+
+                $.each(items, function (index, item) {
+                    // Accessing properties correctly
+                    tableHtml += '<tr>' +
+                        '<td>' + item.empCode + '</td>' +
+                        '<td>' + item.empName + '</td>' +
+                        '<td>' + item.desigName + '</td>' +
+                        '<td>' + item.shiftName + '</td>' +
+                        '<td>' + item.gender + '</td>' +
+                        '<td>' + item.gross + '</td>' +
+                        '</tr>';
+                });
+
+                tableHtml += '</tbody></table>';
+
+                itemsContainer.append(tableHtml);
+            }
+        }
+    });
+
+
+</script>

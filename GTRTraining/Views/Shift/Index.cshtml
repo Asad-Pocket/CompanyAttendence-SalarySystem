@@ -1,0 +1,105 @@
+﻿@model GTRTraining.Models.Shift
+
+<h2>Create Shift</h2>
+
+<form asp-action="Index">
+    <div class="form-group">
+        <label asp-for="ShiftName">Shift Name:</label>
+        <input asp-for="ShiftName" class="form-control" />
+        <span asp-validation-for="ShiftName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShiftIn">Shift In:</label>
+        <input asp-for="ShiftIn" type="time" class="form-control" />
+        <span asp-validation-for="ShiftIn" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShiftOut">Shift Out:</label>
+        <input asp-for="ShiftOut" type="time" class="form-control" />
+        <span asp-validation-for="ShiftOut" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShiftLateTime">Shift Late:</label>
+        <input asp-for="ShiftLateTime" type="time" />
+        <span asp-validation-for="ShiftLateTime" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+<div id="tabular"></div>
+
+@section Scripts {
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@5.0.6/dist/css/tabulator.min.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/tabulator-tables@5.0.6/dist/js/tabulator.min.js"></script>
+    <script>
+        var table;
+
+        $(document).ready(function () {
+            fetchDataFromServer();
+        });
+        function fetchDataFromServer() {
+            var url = '/Shift/ShowShift';
+            return $.ajax({
+                url: url,
+                dataType: "json",
+            }).done(function (response) {
+                console.log("Normal response:", response);
+                var dataTable = response;
+
+                initializeOrUpdateTable(dataTable);
+            });
+        }
+        function initializeOrUpdateTable(dataTable) {
+            if (!table) {
+                table = new Tabulator("#tabular", 
+                    {
+                        data: dataTable,
+                        layout: "fitColumns",
+                        frozenRows: 1,
+                        columns: [
+                            { title: 'ShiftId', field: 'shiftId', visible: false },
+                            { title: 'ShiftName', field: 'shiftName' },
+                            { title: 'ShiftIn Time', field: 'shiftIn' },
+                            { title: 'ShiftOut Time', field: 'shiftOut' },
+                            { title: 'ShiftLate Time', field: 'shiftLateTime' },
+                            {
+                                title: "Actions",
+                                formatter: function (cell, formatterParams, onRendered) {
+                                    var rowData = cell.getRow().getData();
+                                    console.log('Row data:', rowData);
+                                    console.log('Row data:', rowData.shiftId);
+                                    return '<button class="btn btn-sm btn-primary" onclick="editRow(' + rowData.shiftId + ')">Edit</button>' +
+                                        '<button class="btn btn-sm btn-danger" onclick="deleteRow(' + rowData.shiftId + ')">Delete</button>';
+                                },
+                                headerSort: false,
+                                align: 'center',
+                                width: 200,
+                            },
+                        ],
+                    });
+            }
+            else {
+                table.setData(dataTable);
+            }
+        }
+
+        function editRow(id) {
+            window.location.href = '/Shift/Edit/' + id;
+        }
+
+        function deleteRow(id) {
+            window.location.href = '/Shift/Delete/' + id;
+
+            console.log('Delete clicked for row with ID:', id);
+        }
+
+    </script>
+
+   
+}
